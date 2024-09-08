@@ -46,9 +46,9 @@ type User struct {
 }
 
 // SignUp registers the user's email and password to the database.
-func (a *Auth) SignUp(ctx context.Context, credentials UserCredentials) (*User, error) {
+func (a *Auth) SignUp(ctx context.Context, credentials UserCredentials, redirect string) (*User, error) {
 	reqBody, _ := json.Marshal(credentials)
-	reqURL := fmt.Sprintf("%s/%s/signup", a.client.BaseURL, AuthEndpoint)
+	reqURL := fmt.Sprintf("%s/%s/signup?redirect_to=%s", a.client.BaseURL, AuthEndpoint, redirect)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, reqURL, bytes.NewBuffer(reqBody))
 	if err != nil {
 		return nil, err
