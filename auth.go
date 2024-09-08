@@ -46,9 +46,9 @@ type User struct {
 }
 
 // SignUp registers the user's email and password to the database.
-func (a *Auth) SignUp(ctx context.Context, credentials UserCredentials, redirect string) (*User, error) {
+func (a *Auth) SignUp(ctx context.Context, credentials UserCredentials) (*User, error) {
 	reqBody, _ := json.Marshal(credentials)
-	reqURL := fmt.Sprintf("%s/%s/signup?redirect_to=%s", a.client.BaseURL, AuthEndpoint, redirect)
+	reqURL := fmt.Sprintf("%s/%s/signups", a.client.BaseURL, AuthEndpoint)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, reqURL, bytes.NewBuffer(reqBody))
 	if err != nil {
 		return nil, err
@@ -276,9 +276,9 @@ func (a *Auth) UpdateUser(ctx context.Context, userToken string, updateData map[
 }
 
 // ResetPasswordForEmail sends a password recovery link to the given e-mail address.
-func (a *Auth) ResetPasswordForEmail(ctx context.Context, email string) error {
+func (a *Auth) ResetPasswordForEmail(ctx context.Context, email string, redirectURL string) error {
 	reqBody, _ := json.Marshal(map[string]string{"email": email})
-	reqURL := fmt.Sprintf("%s/%s/recover", a.client.BaseURL, AuthEndpoint)
+	reqURL := fmt.Sprintf("%s/%s/recover?redirect_to=%s", a.client.BaseURL, AuthEndpoint, redirectURL)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, reqURL, bytes.NewBuffer(reqBody))
 	if err != nil {
 		return err
