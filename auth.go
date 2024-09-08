@@ -276,11 +276,10 @@ func (a *Auth) UpdateUser(ctx context.Context, userToken string, updateData map[
 }
 
 // ResetPasswordForEmail sends a password recovery link to the given e-mail address.
-func (a *Auth) ResetPasswordForEmail(ctx context.Context, email string, redirectURL string) error {
+func (a *Auth) ResetPasswordForEmail(ctx context.Context, email string) error {
 	reqBody, _ := json.Marshal(map[string]string{"email": email})
-	reqURL := fmt.Sprintf("%s/%s/recover?redirect_to=%s", a.client.BaseURL, AuthEndpoint, redirectURL)
+	reqURL := fmt.Sprintf("%s/%s/recover", a.client.BaseURL, AuthEndpoint)
 	
-	fmt.Println("ResetPasswordForEmail", reqURL)
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, reqURL, bytes.NewBuffer(reqBody))
 	if err != nil {
 		return err
